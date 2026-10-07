@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --fc-burgundy: #4A2523;
+  --fc-burgundy-dark: #351816;
+  --fc-burgundy-soft: #6B403C;
+  --fc-background: #F7F2E9;
+  --fc-surface: #FFFDF8;
+  --fc-surface-warm: #F8EFE1;
+  --fc-surface-muted: #F2EBDD;
+  --fc-gold: #D7A94C;
+  --fc-gold-light: #F5DF9F;
+  --fc-beige: #E8D8C1;
+  --fc-text: #2D2422;
+  --fc-text-muted: #746B66;
+  --fc-text-soft: #958B85;
+  --fc-text-on-dark: #FFF9F0;
+  --fc-border: #E7DED1;
+  --fc-border-strong: #D6C8B8;
+  --fc-success: #5F8F65;
+  --fc-success-soft: #E8F0E6;
+  --fc-warning: #B98228;
+  --fc-warning-soft: #F8EBCB;
+  --fc-danger: #B84C46;
+  --fc-danger-soft: #F5E3E0;
+  --fc-info: #557A8A;
+  --fc-info-soft: #E4EDF0;
+}
+
+body {
+  background-color: var(--fc-background);
+  color: var(--fc-text);
+  font-family: 'DM Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .font-serif-heading {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F7F2E9;
+}
+::-webkit-scrollbar-thumb {
+  background: #E8D8C1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D6C8B8;
+}
+
+/* Focus Ring Custom */
+*:focus-visible {
+  outline: 2px solid #4A2523;
+  outline-offset: 2px;
+}
