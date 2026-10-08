@@ -1,7 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { apiRequest, normalizeDonation } from '../services/api';
 import { useAuth } from './AuthContext';
-import { initialImpactMetrics } from '../data/mockData';
 
 const AppContext = createContext();
 
@@ -9,7 +8,7 @@ export const AppProvider = ({ children }) => {
   const { user } = useAuth();
   const [donations, setDonations] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [impactMetrics] = useState(initialImpactMetrics);
+  const [impactMetrics, setImpactMetrics] = useState({ mealsServed: 0, completedDeliveries: 0, eventsConnected: 0, partnerNgos: 0, activeVolunteers: 0 });
   const [loading, setLoading] = useState(Boolean(user));
 
   const refreshData = useCallback(async () => {
@@ -32,6 +31,14 @@ export const AppProvider = ({ children }) => {
       setLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    let active = true;
+    apiRequest('/impact', { token: null })
+      .then((response) => { if (active) setImpactMetrics(response.data); })
+      .catch((error) => console.error('Could not load FOOD CONNECT impact metrics:', error.message));
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     setLoading(Boolean(user));

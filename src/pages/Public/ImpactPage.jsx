@@ -27,10 +27,10 @@ const ImpactPage = () => {
 
       {/* Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricBlock icon={FiHeart} value={impactMetrics.mealsServed} label="Total Meals Served" subtitle="To verified NGO hubs" />
-        <MetricBlock icon={FiBox} value={impactMetrics.foodRescuedKg} label="Food Waste Prevented" subtitle="Redirected from landfills" />
-        <MetricBlock icon={FiUsers} value={impactMetrics.eventsConnected} label="Events Connected" subtitle="Weddings & banquets" />
-        <MetricBlock icon={FiShield} value={impactMetrics.partnerNgos} label="Partner NGOs" subtitle="Verified community shelters" />
+        <MetricBlock icon={FiHeart} value={impactMetrics.mealsServed.toLocaleString('en-IN')} label="Meals Delivered" subtitle="From completed donations" />
+        <MetricBlock icon={FiBox} value={impactMetrics.completedDeliveries.toLocaleString('en-IN')} label="Completed Deliveries" subtitle="Verified workflow completions" />
+        <MetricBlock icon={FiUsers} value={impactMetrics.eventsConnected.toLocaleString('en-IN')} label="Events Connected" subtitle="Active and completed donations" />
+        <MetricBlock icon={FiShield} value={impactMetrics.partnerNgos.toLocaleString('en-IN')} label="Partner NGOs" subtitle="Verified community shelters" />
       </div>
 
       {/* Impact Calculator Widget */}

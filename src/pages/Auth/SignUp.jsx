@@ -13,6 +13,8 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [organization, setOrganization] = useState('');
+  const [registrationNumber, setRegistrationNumber] = useState('');
+  const [verificationEvidenceUrl, setVerificationEvidenceUrl] = useState('');
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState('');
@@ -33,17 +35,18 @@ const SignUp = () => {
     }
     setError('');
     setLoading(true);
-    const res = await register({ fullName, email, phone, organization, password, role });
+    const registrationData = role === 'ngo' ? { registrationNumber, verificationEvidenceUrl } : {};
+    const res = await register({ fullName, email, phone, organization, password, role, ...registrationData });
     setLoading(false);
     if (res.success) {
       if (role === 'ngo') navigate('/ngo/dashboard');
       else if (role === 'volunteer') navigate('/volunteer/dashboard');
       else navigate('/donor/dashboard');
     } else {
-      if (res.error?.includes('email-already-in-use')) {
+      if (res.code === 'EMAIL_IN_USE') {
         setError('An account with this email already exists. Please log in instead.');
-      } else if (res.error?.includes('invalid-email')) {
-        setError('Please enter a valid email address.');
+      } else if (res.code === 'VALIDATION_ERROR') {
+        setError('Please check your name, email, password, and account role.');
       } else {
         setError(res.error || 'Registration failed. Please try again.');
       }
@@ -172,6 +175,7 @@ const SignUp = () => {
                     <FiHome className="w-4 h-4 text-[#958B85] absolute left-3.5 top-3" />
                     <input
                       type="text"
+                      required={role === 'ngo'}
                       value={organization}
                       onChange={(e) => setOrganization(e.target.value)}
                       placeholder={role === 'ngo' ? 'Hope Shelter Trust' : 'Grand Banquets'}
@@ -180,6 +184,24 @@ const SignUp = () => {
                   </div>
                 </div>
               </div>
+
+              {role === 'ngo' && (
+                <div>
+                  <label className="block text-xs font-bold text-[#4A2523] mb-1">Government Registration Number</label>
+                  <input
+                    type="text"
+                    required
+                    value={registrationNumber}
+                    onChange={(e) => setRegistrationNumber(e.target.value)}
+                    placeholder="Enter your NGO registration number"
+                    className="w-full px-3.5 py-2 bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-md text-sm text-[#2D2422] focus:border-[#4A2523] focus:outline-none"
+                  />
+                  <p className="text-[11px] text-[#746B66] mt-1">Your account stays pending until a FOOD CONNECT admin reviews it.</p>
+                  <label htmlFor="ngo-evidence-link" className="block text-xs font-bold text-[#4A2523] mt-3 mb-1">Registration Document Link (Optional)</label>
+                  <input id="ngo-evidence-link" type="url" pattern="https://.*" value={verificationEvidenceUrl} onChange={(e) => setVerificationEvidenceUrl(e.target.value)} placeholder="https://drive.google.com/..." className="w-full px-3.5 py-2 bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-md text-sm text-[#2D2422] focus:border-[#4A2523] focus:outline-none" />
+                  <p className="text-[11px] text-[#746B66] mt-1">Share an HTTPS link the review team can open. Set its access permissions accordingly.</p>
+                </div>
+              )}
 
               <div>
                 <label className="block text-xs font-bold text-[#4A2523] mb-1">Password</label>

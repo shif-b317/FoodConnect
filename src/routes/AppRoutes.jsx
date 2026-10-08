@@ -1,5 +1,23 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const roleHome = (role) => role === 'ngo' ? '/ngo/dashboard' : role === 'volunteer' ? '/volunteer/dashboard' : role === 'admin' ? '/admin/dashboard' : '/donor/dashboard';
+
+const RequireAuth = ({ children }) => {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/login" replace />;
+};
+
+const RequireRole = ({ role, allowPendingNgo = false, children }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== role) return <Navigate to={roleHome(user.role)} replace />;
+  if (role === 'ngo' && !allowPendingNgo && user.verificationStatus !== 'VERIFIED') {
+    return <Navigate to="/ngo/dashboard" replace />;
+  }
+  return children;
+};
 
 // Public Pages
 import LandingPage from '../pages/Public/LandingPage';
@@ -59,10 +77,10 @@ const AppRoutes = () => {
       <Route path="/donor/donations/:id" element={<DonationDetails />} />
 
       {/* NGO Routes */}
-      <Route path="/ngo/dashboard" element={<NgoDashboard />} />
-      <Route path="/ngo/nearby-donations" element={<NearbyDonations />} />
-      <Route path="/ngo/donations/:id" element={<NgoDonationDetails />} />
-      <Route path="/ngo/accepted" element={<AcceptedDonations />} />
+      <Route path="/ngo/dashboard" element={<RequireRole role="ngo" allowPendingNgo><NgoDashboard /></RequireRole>} />
+      <Route path="/ngo/nearby-donations" element={<RequireRole role="ngo"><NearbyDonations /></RequireRole>} />
+      <Route path="/ngo/donations/:id" element={<RequireRole role="ngo"><NgoDonationDetails /></RequireRole>} />
+      <Route path="/ngo/accepted" element={<RequireRole role="ngo"><AcceptedDonations /></RequireRole>} />
 
       {/* Volunteer Routes */}
       <Route path="/volunteer/dashboard" element={<VolunteerDashboard />} />
@@ -70,9 +88,9 @@ const AppRoutes = () => {
       <Route path="/volunteer/tracking/:id" element={<VolunteerTracking />} />
 
       {/* Shared & Profile Routes */}
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/settings" element={<SettingsPage />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
+      <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
+      <Route path="/admin/dashboard" element={<RequireRole role="admin"><AdminDashboard /></RequireRole>} />
 
       {/* Fallback Catch-all Redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />

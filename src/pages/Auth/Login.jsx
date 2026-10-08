@@ -23,18 +23,15 @@ const Login = () => {
     const res = await login(email, password);
     setLoading(false);
     if (res.success) {
-      // Role comes from Firestore profile, but we also respect the UI tab for UX
-      if (res.user?.role === 'ngo') navigate('/ngo/dashboard');
+      if (res.user?.role === 'admin') navigate('/admin/dashboard');
+      else if (res.user?.role === 'ngo') navigate('/ngo/dashboard');
       else if (res.user?.role === 'volunteer') navigate('/volunteer/dashboard');
       else navigate('/donor/dashboard');
     } else {
-      // Map Firebase error codes to friendly messages
-      if (res.error?.includes('user-not-found') || res.error?.includes('invalid-credential')) {
-        setError('No account found with this email. Please register first.');
-      } else if (res.error?.includes('wrong-password')) {
-        setError('Incorrect password. Please try again.');
-      } else if (res.error?.includes('too-many-requests')) {
-        setError('Too many failed attempts. Please try again later.');
+      if (res.code === 'INVALID_CREDENTIALS') {
+        setError('Email or password is incorrect. Please check your details and try again.');
+      } else if (res.code === 'ACCOUNT_SUSPENDED') {
+        setError('This account is suspended. Please contact FOOD CONNECT support.');
       } else {
         setError(res.error || 'Login failed. Please try again.');
       }

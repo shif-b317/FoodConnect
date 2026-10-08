@@ -116,25 +116,25 @@ const LandingPage = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-[#E7DED1]/60">
             <div className="px-4">
-              <div className="text-3xl lg:text-4xl font-serif font-bold text-[#4A2523]">{impactMetrics.mealsServed}</div>
+              <div className="text-3xl lg:text-4xl font-serif font-bold text-[#4A2523]">{impactMetrics.mealsServed.toLocaleString('en-IN')}</div>
               <div className="text-sm font-medium text-[#2D2422] mt-1">Meals Served</div>
               <div className="text-xs text-[#746B66] mt-0.5">To communities in need</div>
             </div>
 
             <div className="px-4">
-              <div className="text-3xl lg:text-4xl font-serif font-bold text-[#4A2523]">{impactMetrics.foodRescuedKg}</div>
-              <div className="text-sm font-medium text-[#2D2422] mt-1">Food Rescued</div>
-              <div className="text-xs text-[#746B66] mt-0.5">Prevented from waste</div>
+              <div className="text-3xl lg:text-4xl font-serif font-bold text-[#4A2523]">{impactMetrics.completedDeliveries.toLocaleString('en-IN')}</div>
+              <div className="text-sm font-medium text-[#2D2422] mt-1">Deliveries Completed</div>
+              <div className="text-xs text-[#746B66] mt-0.5">Recorded on the platform</div>
             </div>
 
             <div className="px-4">
-              <div className="text-3xl lg:text-4xl font-serif font-bold text-[#4A2523]">{impactMetrics.eventsConnected}</div>
+              <div className="text-3xl lg:text-4xl font-serif font-bold text-[#4A2523]">{impactMetrics.eventsConnected.toLocaleString('en-IN')}</div>
               <div className="text-sm font-medium text-[#2D2422] mt-1">Events Connected</div>
               <div className="text-xs text-[#746B66] mt-0.5">Weddings & gatherings</div>
             </div>
 
             <div className="px-4">
-              <div className="text-3xl lg:text-4xl font-serif font-bold text-[#4A2523]">{impactMetrics.partnerNgos}</div>
+              <div className="text-3xl lg:text-4xl font-serif font-bold text-[#4A2523]">{impactMetrics.partnerNgos.toLocaleString('en-IN')}</div>
               <div className="text-sm font-medium text-[#2D2422] mt-1">Partner NGOs</div>
               <div className="text-xs text-[#746B66] mt-0.5">Verified distribution hubs</div>
             </div>

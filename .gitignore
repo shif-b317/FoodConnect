@@ -2,6 +2,7 @@ node_modules/
 dist/
 backend/node_modules/
 backend/.env
+backend/backups/
 .env
 .env.*
 !.env.example

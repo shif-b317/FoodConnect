@@ -8,7 +8,9 @@ export async function authenticate(req, res, next) {
   try {
     const payload = jwt.verify(token, config.jwtSecret);
     const user = await User.findById(payload.sub);
-    if (!user || user.status !== 'ACTIVE') return res.status(401).json({ success: false, error: { code: 'INVALID_SESSION', message: 'This session is no longer valid.' } });
+    if (!user || user.status !== 'ACTIVE' || (payload.ver || 0) !== (user.tokenVersion || 0)) {
+      return res.status(401).json({ success: false, error: { code: 'INVALID_SESSION', message: 'This session is no longer valid.' } });
+    }
     req.user = user;
     next();
   } catch {

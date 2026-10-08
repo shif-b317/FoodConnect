@@ -1,11 +1,3 @@
-export const initialImpactMetrics = {
-  mealsServed: "1,24,580",
-  foodRescuedKg: "2,15,000 kg",
-  eventsConnected: "3,950",
-  partnerNgos: "1,280",
-  activeVolunteers: "840",
-};
-
 export const initialDonations = [
   {
     id: "FC-1001",

@@ -39,6 +39,32 @@ const NgoDashboard = () => {
     }
   };
 
+  if (user?.verificationStatus !== 'VERIFIED') {
+    const rejected = user?.verificationStatus === 'REJECTED';
+    return (
+      <div className="max-w-3xl mx-auto py-12">
+        <div className="bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-xl p-8 sm:p-10 text-center space-y-4 shadow-sm">
+          <FiShield className="w-10 h-10 text-[#D7A94C] mx-auto" />
+          <Badge status={rejected ? 'REJECTED' : 'PENDING'} />
+          <h1 className="text-3xl font-serif font-bold text-[#4A2523]">
+            {rejected ? 'NGO application needs an update' : 'NGO verification is in review'}
+          </h1>
+          <p className="text-sm text-[#746B66] max-w-xl mx-auto">
+            {rejected
+              ? 'Your organization cannot accept donations until the application is approved. Review the admin note and contact FOOD CONNECT support if you need to resubmit.'
+              : 'Your organization can explore FOOD CONNECT after an admin verifies its registration details. Donation acceptance will be enabled once approved.'}
+          </p>
+          {user?.registrationNumber && <p className="text-xs text-[#746B66]">Registration number: {user.registrationNumber}</p>}
+          {user?.verificationNote && (
+            <div className="text-sm text-[#4A2523] bg-[#F8EFE1] border border-[#E8D8C1] rounded-fc-md p-4 text-left">
+              <strong>Review note:</strong> {user.verificationNote}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 pb-12">
       
@@ -47,13 +73,13 @@ const NgoDashboard = () => {
         <div>
           <div className="flex items-center space-x-2 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider text-[#D7A94C]">NGO Dashboard</span>
-            <Badge status="VERIFIED" />
+            <Badge status={user.verificationStatus} />
           </div>
           <h1 className="text-3xl font-serif font-bold text-[#4A2523]">
             {user?.organization || 'Hope Shelter & Community Kitchen'}
           </h1>
           <p className="text-sm text-[#746B66] mt-1">
-            Reg. No: REG-KA-2018-8842 • Feeds up to 300 individuals daily
+            Registration no: {user.registrationNumber || 'Not provided'}
           </p>
         </div>
 

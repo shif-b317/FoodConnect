@@ -30,7 +30,7 @@ router.patch('/read-all', async (req, res) => {
 router.patch('/:id/read', async (req, res) => {
   const notification = await Notification.findOneAndUpdate(
     { _id: req.params.id, $or: [{ userId: req.user.id }, { userId: null, role: { $in: [req.user.role, 'all'] } }] },
-    { $addToSet: { readBy: req.user._id } }, { new: true },
+    { $addToSet: { readBy: req.user._id } }, { returnDocument: 'after' },
   );
   if (!notification) throw new HttpError(404, 'NOTIFICATION_NOT_FOUND', 'Notification not found.');
   res.json({ success: true, data: { notification: view(notification, req.user.id) } });

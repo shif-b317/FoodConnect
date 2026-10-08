@@ -52,13 +52,46 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async (profile) => {
+    try {
+      const response = await apiRequest('/auth/me', { method: 'PATCH', body: profile });
+      const nextUser = normalizeUser(response.data.user);
+      setUser(nextUser);
+      return { success: true, user: nextUser };
+    } catch (error) {
+      return { success: false, error: error.message, code: error.code };
+    }
+  };
+
+  const updateNotificationPreferences = async (preferences) => {
+    try {
+      const response = await apiRequest('/auth/me/preferences', { method: 'PATCH', body: preferences });
+      const nextUser = normalizeUser(response.data.user);
+      setUser(nextUser);
+      return { success: true, user: nextUser };
+    } catch (error) {
+      return { success: false, error: error.message, code: error.code };
+    }
+  };
+
+  const changePassword = async (currentPassword, newPassword) => {
+    try {
+      await apiRequest('/auth/me/password', { method: 'PATCH', body: { currentPassword, newPassword } });
+      clearToken();
+      setUser(null);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message, code: error.code };
+    }
+  };
+
   const logout = async () => {
     clearToken();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, updateProfile, updateNotificationPreferences, changePassword, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );

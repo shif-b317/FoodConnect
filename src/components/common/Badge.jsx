@@ -23,6 +23,8 @@ const Badge = ({ status, className = '' }) => {
         return 'bg-[#E8F0E6] text-[#5F8F65] border-[#C7DFC4]';
       case 'PENDING':
         return 'bg-[#F8EBCB] text-[#B98228] border-[#E8D8C1]';
+      case 'REJECTED':
+        return 'bg-[#F5E3E0] text-[#B84C46] border-[#ECC9C5]';
       default:
         return 'bg-[#F2EBDD] text-[#746B66] border-[#E7DED1]';
     }
@@ -42,6 +44,7 @@ const Badge = ({ status, className = '' }) => {
       case 'EXPIRED': return 'Expired';
       case 'VERIFIED': return 'Verified NGO';
       case 'PENDING': return 'Pending Verification';
+      case 'REJECTED': return 'Not Verified';
       default: return status || 'Unknown';
     }
   };
