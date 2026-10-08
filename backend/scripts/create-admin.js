@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import { createInterface } from 'node:readline';
+import { createInterface } from 'node:readline/promises';
 import User from '../src/models/User.js';
 
 dotenv.config();
