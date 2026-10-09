@@ -168,7 +168,7 @@ const SignUp = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className={`grid grid-cols-1 ${role === 'volunteer' ? '' : 'sm:grid-cols-2'} gap-3`}>
                 <div>
                   <label className="block text-xs font-bold text-[#4A2523] mb-1">Phone Number</label>
                   <div className="relative">
@@ -184,7 +184,7 @@ const SignUp = () => {
                   </div>
                 </div>
 
-                <div>
+                {role !== 'volunteer' && <div>
                   <label className="block text-xs font-bold text-[#4A2523] mb-1">
                     {role === 'ngo' ? 'Organization Name' : 'Venue / Event Co (Optional)'}
                   </label>
@@ -199,7 +199,7 @@ const SignUp = () => {
                       className="w-full pl-10 pr-3.5 py-2 bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-md text-sm text-[#2D2422] focus:border-[#4A2523] focus:outline-none"
                     />
                   </div>
-                </div>
+                </div>}
               </div>
 
               {role === 'ngo' && (
