@@ -71,6 +71,14 @@ docker compose up -d --build
 
 Keep the MongoDB volume private and enable scheduled backups. For local backup archives, install MongoDB Database Tools and run `scripts/backup-mongo.ps1`; it reads `MONGODB_URI` from the shell or `.env`. On Windows, `scripts/install-backup-task.ps1` registers a daily Task Scheduler job (default 2:30 AM, while the current user is signed in). Store copies off the application host and restrict access to the archive. For a hosted database, enable and verify the provider's managed backup policy as well.
 
+### Render and MongoDB Atlas deployment
+
+The repository root `render.yaml` defines the API and React frontend. It uses a Singapore Render Starter service for the always-on API and Render static hosting for the frontend. The Blueprint wires the frontend build to the API URL and sets the API CORS/reset-link origin to the default frontend URL `https://foodconnect-web.onrender.com`. If you rename either service or attach a custom domain, update these URLs in the Blueprint. It prompts for `MONGODB_URI`, `RESEND_API_KEY`, and `EMAIL_FROM`; it generates `JWT_SECRET`.
+
+Create a MongoDB Atlas cluster and database user first, and use its connection string for `MONGODB_URI`. Atlas Flex is a lower-cost option for a hosted preview; MongoDB describes Flex for development and testing, so use a dedicated cluster for production customer data and enable managed backups. In Resend, authorize a sender domain/address before configuring `EMAIL_FROM`.
+
+To launch, connect the FoodConnect GitHub repository in Render and create a Blueprint from `render.yaml`. Review the service plans and billing before applying. After entering the Atlas and Resend values, wait for both services to deploy and verify `/api/v1/health` on the API URL. Keep production credentials in the provider dashboard; never commit them to `.env` or the Blueprint.
+
 The API emits JSON request/error logs to stdout with request IDs. Set `TRUST_PROXY_HOPS` to the actual number of trusted reverse proxies in front of the API. Production startup rejects local MongoDB URIs, non-HTTPS frontend URLs, weak/missing JWT secrets, and missing email-provider credentials.
 
 Success and error responses use `{ success, data, message }` / `{ success, error: { code, message } }` envelopes.
