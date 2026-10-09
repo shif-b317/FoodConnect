@@ -51,8 +51,14 @@ export const AppProvider = ({ children }) => {
   const runMutation = async (path, options, resultKey = 'donation') => {
     try {
       const response = await apiRequest(path, options);
-      await refreshData();
       const item = response.data?.[resultKey];
+      if (resultKey === 'donation' && item) {
+        const savedDonation = normalizeDonation(item);
+        setDonations((current) => current.some((donation) => donation.id === savedDonation.id)
+          ? current.map((donation) => donation.id === savedDonation.id ? savedDonation : donation)
+          : [savedDonation, ...current]);
+      }
+      await refreshData();
       return { success: true, ...(item ? { [resultKey]: resultKey === 'donation' ? normalizeDonation(item) : item } : {}) };
     } catch (error) {
       return { success: false, error: error.message, code: error.code };

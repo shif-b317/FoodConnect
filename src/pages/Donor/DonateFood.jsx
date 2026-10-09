@@ -35,18 +35,29 @@ const DonateFood = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.eventName || !formData.foodType || !formData.address) {
-      setError('Please fill in required event name, food type, and pickup location.');
+    const meals = Number(formData.estimatedMeals);
+    if (!formData.eventName.trim() || !formData.foodType.trim() || !formData.address.trim() || !formData.city.trim()) {
+      setError('Add the event name, food summary, pickup address, and city before publishing.');
+      return;
+    }
+    if (!Number.isInteger(meals) || meals < 1) {
+      setError('Estimated meals must be a whole number greater than zero.');
       return;
     }
 
+    setError('');
     setSaving(true);
-    const res = await createDonation(formData);
-    setSaving(false);
-    if (res.success) {
-      navigate(`/donor/donations/${res.donation.id}`);
-    } else {
-      setError(res.error || 'Could not create the donation.');
+    try {
+      const res = await createDonation({ ...formData, eventName: formData.eventName.trim(), foodType: formData.foodType.trim(), address: formData.address.trim(), estimatedMeals: meals });
+      if (res.success) {
+        navigate(`/donor/donations/${res.donation.id}`);
+      } else {
+        setError(res.error || 'Could not publish the donation. Please try again.');
+      }
+    } catch {
+      setError('Could not reach the server. Check that the backend is running, then try again.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -64,17 +75,11 @@ const DonateFood = () => {
         </p>
       </div>
 
-      {error && (
-        <div className="p-4 bg-[#F5E3E0] border border-[#ECC9C5] text-[#B84C46] text-sm rounded-fc-md">
-          {error}
-        </div>
-      )}
-
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Left Column: Form */}
         <div className="lg:col-span-8 bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-xl p-6 sm:p-8 shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
             
             {/* Section 1: Event Information */}
             <div className="space-y-4">
@@ -88,7 +93,6 @@ const DonateFood = () => {
                   <label className="block text-xs font-bold text-[#4A2523] mb-1">Event Name *</label>
                   <input
                     type="text"
-                    required
                     value={formData.eventName}
                     onChange={(e) => setFormData({ ...formData, eventName: e.target.value })}
                     placeholder="e.g. Royal Banquet Reception"
@@ -118,7 +122,6 @@ const DonateFood = () => {
                   <label className="block text-xs font-bold text-[#4A2523] mb-1">Food Summary & Cuisine *</label>
                   <input
                     type="text"
-                    required
                     value={formData.foodType}
                     onChange={(e) => setFormData({ ...formData, foodType: e.target.value })}
                     placeholder="e.g. North Indian Buffet (Curries, Biryani, Naan)"
@@ -130,7 +133,8 @@ const DonateFood = () => {
                   <label className="block text-xs font-bold text-[#4A2523] mb-1">Estimated Meals Count *</label>
                   <input
                     type="number"
-                    required
+                    min="1"
+                    step="1"
                     value={formData.estimatedMeals}
                     onChange={(e) => setFormData({ ...formData, estimatedMeals: e.target.value, quantity: `${e.target.value} meals` })}
                     placeholder="100"
@@ -162,7 +166,6 @@ const DonateFood = () => {
                 <label className="block text-xs font-bold text-[#4A2523] mb-1">Pickup Street Address *</label>
                 <input
                   type="text"
-                  required
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="e.g. Anand Banquet Hall, 45 Grand Palace Road"
@@ -240,13 +243,19 @@ const DonateFood = () => {
             </div>
 
             {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={saving}
-              className="w-full py-3.5 bg-[#4A2523] text-[#FFF9F0] font-bold text-base rounded-fc-md hover:bg-[#351816] transition-colors flex items-center justify-center space-x-2 shadow-sm"
+            {error && (
+              <div role="alert" aria-live="polite" className="p-4 bg-[#F5E3E0] border border-[#ECC9C5] text-[#B84C46] text-sm rounded-fc-md">
+                {error}
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={saving}
+              aria-busy={saving}
+              className="w-full py-3.5 bg-[#4A2523] text-[#FFF9F0] font-bold text-base rounded-fc-md hover:bg-[#351816] disabled:opacity-70 disabled:cursor-wait transition-colors flex items-center justify-center space-x-2 shadow-sm"
             >
-              <span>Publish Surplus Food Donation</span>
-              <FiArrowRight className="w-5 h-5" />
+              <span>{saving ? 'Publishing donation…' : 'Publish Surplus Food Donation'}</span>
+              {!saving && <FiArrowRight className="w-5 h-5" />}
             </button>
 
           </form>
