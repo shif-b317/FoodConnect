@@ -29,27 +29,44 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!fullName.trim() || !email.trim() || !phone.trim() || (role === 'ngo' && (!organization.trim() || !registrationNumber.trim()))) {
+      setError('Please complete all required fields before registering.');
+      return;
+    }
     if (password.length < 8) {
       setError('Password must be at least 8 characters.');
       return;
     }
+    if (role === 'ngo') {
+      try {
+        if (new URL(verificationEvidenceUrl.trim()).protocol !== 'https:') throw new Error();
+      } catch {
+        setError('Enter a valid HTTPS registration document link.');
+        return;
+      }
+    }
     setError('');
     setLoading(true);
-    const registrationData = role === 'ngo' ? { registrationNumber, verificationEvidenceUrl } : {};
-    const res = await register({ fullName, email, phone, organization, password, role, ...registrationData });
-    setLoading(false);
-    if (res.success) {
-      if (role === 'ngo') navigate('/ngo/dashboard');
-      else if (role === 'volunteer') navigate('/volunteer/dashboard');
-      else navigate('/donor/dashboard');
-    } else {
-      if (res.code === 'EMAIL_IN_USE') {
-        setError('An account with this email already exists. Please log in instead.');
+    try {
+      const registrationData = role === 'ngo' ? { registrationNumber: registrationNumber.trim(), verificationEvidenceUrl: verificationEvidenceUrl.trim() } : {};
+      const res = await register({ fullName: fullName.trim(), email: email.trim(), phone: phone.trim(), organization: organization.trim(), password, role, ...registrationData });
+      if (res.success) {
+        if (role === 'ngo') navigate('/ngo/dashboard');
+        else if (role === 'volunteer') navigate('/volunteer/dashboard');
+        else navigate('/donor/dashboard');
       } else if (res.code === 'VALIDATION_ERROR') {
-        setError('Please check your name, email, password, and account role.');
+        setError(role === 'ngo'
+          ? 'Please check your details and provide an HTTPS registration document link.'
+          : 'Please check your name, email, password, and account role.');
+      } else if (res.code === 'EMAIL_IN_USE') {
+        setError('An account with this email already exists. Please log in instead.');
       } else {
         setError(res.error || 'Registration failed. Please try again.');
       }
+    } catch {
+      setError('Could not reach the server. Check your connection and try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,12 +132,12 @@ const SignUp = () => {
             </div>
 
             {error && (
-              <div className="mb-3 p-3 bg-[#F5E3E0] border border-[#ECC9C5] text-[#B84C46] text-xs rounded-fc-md">
+              <div role="alert" aria-live="polite" className="mb-3 p-3 bg-[#F5E3E0] border border-[#ECC9C5] text-[#B84C46] text-xs rounded-fc-md">
                 {error}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-3.5">
+            <form onSubmit={handleSubmit} noValidate className="space-y-3.5">
               <div>
                 <label className="block text-xs font-bold text-[#4A2523] mb-1">Full Name</label>
                 <div className="relative">
@@ -197,8 +214,8 @@ const SignUp = () => {
                     className="w-full px-3.5 py-2 bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-md text-sm text-[#2D2422] focus:border-[#4A2523] focus:outline-none"
                   />
                   <p className="text-[11px] text-[#746B66] mt-1">Your account stays pending until a FOOD CONNECT admin reviews it.</p>
-                  <label htmlFor="ngo-evidence-link" className="block text-xs font-bold text-[#4A2523] mt-3 mb-1">Registration Document Link (Optional)</label>
-                  <input id="ngo-evidence-link" type="url" pattern="https://.*" value={verificationEvidenceUrl} onChange={(e) => setVerificationEvidenceUrl(e.target.value)} placeholder="https://drive.google.com/..." className="w-full px-3.5 py-2 bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-md text-sm text-[#2D2422] focus:border-[#4A2523] focus:outline-none" />
+                  <label htmlFor="ngo-evidence-link" className="block text-xs font-bold text-[#4A2523] mt-3 mb-1">Registration Document Link *</label>
+                  <input id="ngo-evidence-link" type="url" required pattern="https://.*" value={verificationEvidenceUrl} onChange={(e) => setVerificationEvidenceUrl(e.target.value)} placeholder="https://drive.google.com/..." className="w-full px-3.5 py-2 bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-md text-sm text-[#2D2422] focus:border-[#4A2523] focus:outline-none" />
                   <p className="text-[11px] text-[#746B66] mt-1">Share an HTTPS link the review team can open. Set its access permissions accordingly.</p>
                 </div>
               )}
@@ -221,6 +238,7 @@ const SignUp = () => {
               <button
                 type="submit"
                 disabled={loading}
+                aria-busy={loading}
                 className="w-full py-2.5 bg-[#4A2523] text-[#FFF9F0] text-sm font-medium rounded-fc-md hover:bg-[#351816] transition-colors flex items-center justify-center space-x-2 mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading ? (

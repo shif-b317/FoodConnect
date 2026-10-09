@@ -19,12 +19,13 @@ const sensitiveActionLimiter = rateLimit({ windowMs: 60 * 60 * 1000, limit: 5, s
 router.post('/register', async (req, res) => {
   const { fullName, name, email, password, role, phone = '', organization = '', registrationNumber = '', verificationEvidenceUrl = '' } = req.body || {};
   const normalizedRole = String(role || '').toLowerCase();
-  let validEvidenceUrl = !verificationEvidenceUrl;
-  try { validEvidenceUrl ||= new URL(verificationEvidenceUrl).protocol === 'https:'; } catch { validEvidenceUrl = false; }
-  if (!String(fullName || name || '').trim() || !/^\S+@\S+\.\S+$/.test(String(email || '')) || String(password || '').length < 8 || !['donor', 'ngo', 'volunteer'].includes(normalizedRole) || (normalizedRole === 'ngo' && (!String(organization).trim() || !String(registrationNumber).trim())) || (normalizedRole !== 'ngo' && (registrationNumber || verificationEvidenceUrl)) || !validEvidenceUrl) {
-    throw new HttpError(400, 'VALIDATION_ERROR', 'Provide a name, valid email, password of at least 8 characters, and a supported role. NGO accounts also require an organization name and registration number.');
+  const evidenceUrl = String(verificationEvidenceUrl || '').trim();
+  let validEvidenceUrl = false;
+  try { validEvidenceUrl = new URL(evidenceUrl).protocol === 'https:'; } catch { validEvidenceUrl = false; }
+  if (!String(fullName || name || '').trim() || !/^\S+@\S+\.\S+$/.test(String(email || '').trim()) || String(password || '').length < 8 || !['donor', 'ngo', 'volunteer'].includes(normalizedRole) || (normalizedRole === 'ngo' && (!String(organization).trim() || !String(registrationNumber).trim() || !validEvidenceUrl)) || (normalizedRole !== 'ngo' && (registrationNumber || verificationEvidenceUrl))) {
+    throw new HttpError(400, 'VALIDATION_ERROR', 'Provide a name, valid email, password of at least 8 characters, and a supported role. NGO accounts also require an organization name, registration number, and valid HTTPS registration document link.');
   }
-  const user = await User.create({ name: String(fullName || name).trim(), email, passwordHash: await bcrypt.hash(password, 12), role: normalizedRole, phone, organization, registrationNumber, verificationEvidenceUrl });
+  const user = await User.create({ name: String(fullName || name).trim(), email: String(email).trim().toLowerCase(), passwordHash: await bcrypt.hash(password, 12), role: normalizedRole, phone: String(phone).trim(), organization: String(organization).trim(), registrationNumber: String(registrationNumber).trim(), verificationEvidenceUrl: evidenceUrl });
   res.status(201).json({ success: true, data: { user: publicUser(user), token: issueToken(user) }, message: 'Account created successfully.' });
 });
 
