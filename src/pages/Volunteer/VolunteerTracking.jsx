@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import Badge from '../../components/common/Badge';
-import { FiArrowLeft, FiCheckCircle, FiClock, FiMapPin, FiNavigation, FiPhone, FiShield, FiTruck } from 'react-icons/fi';
+import { FiArrowLeft, FiCheckCircle, FiClock, FiMapPin, FiPhone, FiShield, FiTruck } from 'react-icons/fi';
 
 const VolunteerTracking = () => {
   const { id } = useParams();
@@ -105,15 +105,6 @@ const VolunteerTracking = () => {
               {/* Map Canvas Styling */}
               <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#4A2523_1px,transparent_1px)] [background-size:16px_16px]" />
               
-              {/* Distance Info Banner */}
-              <div className="relative z-10 bg-[#FFFDF8]/95 backdrop-blur-md border border-[#E7DED1] p-3 rounded-fc-lg flex items-center justify-between text-xs text-[#2D2422]">
-                <div className="flex items-center space-x-2">
-                  <FiNavigation className="w-4 h-4 text-[#D7A94C]" />
-                  <span className="font-bold text-[#4A2523]">Distance: 3.4 km</span>
-                </div>
-                <span className="text-[#746B66]">Est. Travel: ~12 mins</span>
-              </div>
-
               {/* Simulated Map Visual Route */}
               <div className="relative z-10 my-auto flex items-center justify-between px-6">
                 

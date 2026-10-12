@@ -14,19 +14,30 @@ const ScrollToTop = () => {
   return null;
 };
 
+const AppShell = () => {
+  const { pathname } = useLocation();
+  const hideNavbar = pathname === '/login' || pathname === '/register';
+
+  return (
+    <>
+      <ScrollToTop />
+      <div className="min-h-screen flex flex-col bg-[#F7F2E9] text-[#2D2422]">
+        {!hideNavbar && <Navbar />}
+        <main className="flex-grow">
+          <AppRoutes />
+        </main>
+        <Footer />
+      </div>
+    </>
+  );
+};
+
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <AppProvider>
-          <ScrollToTop />
-          <div className="min-h-screen flex flex-col bg-[#F7F2E9] text-[#2D2422]">
-            <Navbar />
-            <main className="flex-grow">
-              <AppRoutes />
-            </main>
-            <Footer />
-          </div>
+          <AppShell />
         </AppProvider>
       </AuthProvider>
     </BrowserRouter>

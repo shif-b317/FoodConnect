@@ -75,6 +75,61 @@ router.get('/metrics', async (req, res) => {
   } });
 });
 
+router.get('/details', async (req, res) => {
+  const type = String(req.query.type || '').toLowerCase();
+  const queries = {
+    posts: Donation.find({}).sort({ createdAt: -1 }).limit(200),
+    verified_ngos: User.find({ role: 'ngo', status: 'ACTIVE', verificationStatus: 'VERIFIED' }).sort({ createdAt: -1 }).limit(200),
+    pending_review: User.find({
+      role: 'ngo',
+      $or: [{ verificationStatus: 'PENDING' }, { verificationStatus: { $exists: false } }],
+    }).sort({ createdAt: -1 }).limit(200),
+    volunteers: User.find({ role: 'volunteer', status: 'ACTIVE' }).sort({ createdAt: -1 }).limit(200),
+    completed: Donation.find({ status: 'COMPLETED' }).sort({ completedAt: -1 }).limit(200),
+  };
+  if (!queries[type]) throw new HttpError(400, 'INVALID_DETAIL_TYPE', 'Choose posts, verified_ngos, pending_review, volunteers, or completed.');
+
+  const items = await queries[type];
+  if (type === 'posts' || type === 'completed') {
+    return res.json({
+      success: true,
+      data: {
+        items: items.map((donation) => ({
+          id: donation.id,
+          eventName: donation.eventName,
+          donorName: donation.donorName,
+          foodType: donation.foodType,
+          quantity: donation.quantity,
+          estimatedMeals: donation.estimatedMeals,
+          status: donation.status,
+          ngoName: donation.ngoName,
+          volunteerName: donation.volunteerName,
+          createdAt: donation.createdAt,
+          completedAt: donation.completedAt,
+        })),
+      },
+    });
+  }
+
+  if (type === 'verified_ngos' || type === 'pending_review') {
+    return res.json({ success: true, data: { items: items.map(applicationView) } });
+  }
+
+  return res.json({
+    success: true,
+    data: {
+      items: items.map((volunteer) => ({
+        id: volunteer.id,
+        name: volunteer.name,
+        email: volunteer.email,
+        phone: volunteer.phone,
+        createdAt: volunteer.createdAt,
+        status: volunteer.status,
+      })),
+    },
+  });
+});
+
 router.patch('/ngos/:id/verification', async (req, res) => {
   const status = String(req.body?.status || '').toUpperCase();
   const note = String(req.body?.note || '').trim();

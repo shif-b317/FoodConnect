@@ -78,9 +78,7 @@ const SignUp = () => {
         <div className="lg:col-span-6 p-8 sm:p-10 flex flex-col justify-between">
           <div>
             <Link to="/" className="flex items-center space-x-2.5 mb-6">
-              <div className="w-9 h-9 rounded-fc-md bg-[#4A2523] flex items-center justify-center text-[#D7A94C] font-bold text-sm">
-                FC
-              </div>
+              <img src="/food-connect-logo.png" alt="" className="w-9 h-9 rounded-full object-cover" />
               <span className="font-serif font-bold text-xl text-[#4A2523] tracking-tight">
                 FOOD CONNECT
               </span>
@@ -268,8 +266,8 @@ const SignUp = () => {
           <div className="h-full flex flex-col justify-between">
             <div className="relative h-[440px] rounded-fc-xl overflow-hidden border border-[#E8D8C1]">
               <img
-                src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800"
-                alt="Community food distribution"
+                src="/signup-donation-meals.png"
+                alt="Fresh vegetarian meals safely packed for donation"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#351816]/70 via-transparent to-transparent" />

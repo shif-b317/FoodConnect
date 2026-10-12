@@ -48,9 +48,7 @@ const Login = () => {
             
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2.5 mb-8">
-              <div className="w-9 h-9 rounded-fc-md bg-[#4A2523] flex items-center justify-center text-[#D7A94C] font-bold text-sm">
-                FC
-              </div>
+              <img src="/food-connect-logo.png" alt="" className="w-9 h-9 rounded-full object-cover" />
               <span className="font-serif font-bold text-xl text-[#4A2523] tracking-tight">
                 FOOD CONNECT
               </span>

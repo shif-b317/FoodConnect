@@ -28,6 +28,20 @@ const VolunteerDashboard = () => {
     (d.status === 'COMPLETED' || d.status === 'DELIVERED')
   );
 
+  const volunteeredHours = completedAssignments.reduce((total, assignment) => {
+    const startedAt = new Date(assignment.pickupStartedAt || assignment.assignmentAcceptedAt);
+    const finishedAt = new Date(assignment.completedAt || assignment.deliveredAt);
+    const durationInHours = (finishedAt - startedAt) / (1000 * 60 * 60);
+
+    return Number.isFinite(durationInHours) && durationInHours > 0
+      ? total + durationInHours
+      : total;
+  }, 0);
+
+  const formattedVolunteeredHours = volunteeredHours === 0
+    ? '0 hrs'
+    : `${volunteeredHours.toFixed(1)} hrs`;
+
   const handleAcceptAssignment = async (donationId) => {
     const res = await acceptAssignment(donationId);
 
@@ -44,13 +58,13 @@ const VolunteerDashboard = () => {
         <div>
           <div className="flex items-center space-x-2 mb-1">
             <span className="text-xs font-bold uppercase tracking-wider text-[#D7A94C]">Volunteer Dispatch</span>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E8F0E6] text-[#5F8F65] border border-[#C7DFC4]">Active Volunteer</span>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E8F0E6] text-[#5F8F65] border border-[#C7DFC4]">Volunteer Account</span>
           </div>
           <h1 className="text-3xl font-serif font-bold text-[#4A2523]">
-            Welcome Back, {user?.name || 'Rahul Sharma'}!
+            Welcome Back, {user?.name || 'Volunteer'}!
           </h1>
           <p className="text-sm text-[#746B66] mt-1">
-            Vehicle: Motorcycle with Insulated Carrier • Transporting meals safely
+            Your pickup and delivery activity
           </p>
         </div>
 
@@ -65,8 +79,8 @@ const VolunteerDashboard = () => {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <MetricBlock icon={FiTruck} value={activeAssignment ? '1 Active' : 'None'} label="Current Active Assignment" subtitle="In progress" />
-        <MetricBlock icon={FiCheckCircle} value={48 + completedAssignments.length} label="Completed Pickups" subtitle="Lifetime deliveries" />
-        <MetricBlock icon={FiClock} value="120 hrs" label="Volunteered Hours" subtitle="Community service" />
+        <MetricBlock icon={FiCheckCircle} value={completedAssignments.length} label="Completed Pickups" subtitle="Recorded deliveries" />
+        <MetricBlock icon={FiClock} value={formattedVolunteeredHours} label="Volunteered Hours" subtitle="Based on recorded activity" />
       </div>
 
       {/* Active Assignment Highlight Callout */}
@@ -149,7 +163,6 @@ const VolunteerDashboard = () => {
                 </div>
 
                 <div className="pt-2 border-t border-[#E8D8C1] flex items-center justify-between">
-                  <span className="text-[11px] text-[#746B66]">Est. Distance: ~3.5 km</span>
                   <button
                     onClick={() => handleAcceptAssignment(item.id)}
                     className="px-4 py-2 bg-[#4A2523] text-[#FFF9F0] text-xs font-bold rounded-fc-md hover:bg-[#351816] transition-colors flex items-center space-x-1"

@@ -39,8 +39,8 @@ const AboutPage = () => {
 
         <div>
           <img
-            src="https://images.unsplash.com/photo-1610057099443-f63a152d19eb?auto=format&fit=crop&q=80&w=800"
-            alt="Warm community food distribution"
+            src="/about-donated-meals.png"
+            alt="Fresh vegetarian meals safely packed for donation at a community kitchen"
             className="w-full h-[380px] object-cover rounded-fc-lg border border-[#E7DED1]"
           />
         </div>

@@ -13,6 +13,9 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState('');
   const [error, setError] = useState('');
+  const [selectedMetric, setSelectedMetric] = useState(null);
+  const [details, setDetails] = useState([]);
+  const [detailsLoading, setDetailsLoading] = useState(false);
 
   const refreshApplications = useCallback(async () => {
     setLoading(true);
@@ -33,6 +36,29 @@ const AdminDashboard = () => {
   }, [status]);
 
   useEffect(() => { refreshApplications(); }, [refreshApplications]);
+
+  const metricDetails = {
+    posts: { title: 'All Donation Posts', description: 'Every donation post recorded on the platform.' },
+    verified_ngos: { title: 'Verified NGOs', description: 'Organizations approved by an administrator.' },
+    pending_review: { title: 'NGOs Pending Review', description: 'NGO accounts awaiting administrator review.' },
+    volunteers: { title: 'Registered Volunteers', description: 'Active volunteer accounts registered on the platform.' },
+    completed: { title: 'Completed Donation Workflows', description: 'Donation workflows marked completed.' },
+  };
+
+  const loadDetails = async (type) => {
+    setSelectedMetric(type);
+    setDetailsLoading(true);
+    setError('');
+    try {
+      const response = await apiRequest(`/admin/details?type=${type}`);
+      setDetails(response.data.items || []);
+    } catch (requestError) {
+      setDetails([]);
+      setError(requestError.message || 'Could not load the selected details.');
+    } finally {
+      setDetailsLoading(false);
+    }
+  };
 
   const reviewApplication = async (ngoId, nextStatus) => {
     const note = notes[ngoId] || '';
@@ -64,12 +90,57 @@ const AdminDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-        <MetricBlock icon={FiBox} value={metrics.totalDonations} label="Total Posts" subtitle="Platform donations" />
-        <MetricBlock icon={FiShield} value={counts.verified} label="Verified NGOs" subtitle="Approved organizations" />
-        <MetricBlock icon={FiUsers} value={counts.pending} label="Pending Review" subtitle="NGO applications" />
-        <MetricBlock icon={FiUsers} value={metrics.registeredVolunteers} label="Volunteers" subtitle="Registered accounts" />
-        <MetricBlock icon={FiCheckCircle} value={`${metrics.completionRate}%`} label="Completion Rate" subtitle="Completed donation workflows" />
+        <MetricBlock icon={FiBox} value={metrics.totalDonations} label="Total Posts" subtitle="Platform donations" onClick={() => loadDetails('posts')} selected={selectedMetric === 'posts'} />
+        <MetricBlock icon={FiShield} value={counts.verified} label="Verified NGOs" subtitle="Approved organizations" onClick={() => loadDetails('verified_ngos')} selected={selectedMetric === 'verified_ngos'} />
+        <MetricBlock icon={FiUsers} value={counts.pending} label="Pending Review" subtitle="NGO applications" onClick={() => loadDetails('pending_review')} selected={selectedMetric === 'pending_review'} />
+        <MetricBlock icon={FiUsers} value={metrics.registeredVolunteers} label="Volunteers" subtitle="Registered accounts" onClick={() => loadDetails('volunteers')} selected={selectedMetric === 'volunteers'} />
+        <MetricBlock icon={FiCheckCircle} value={`${metrics.completionRate}%`} label="Completion Rate" subtitle="Completed donation workflows" onClick={() => loadDetails('completed')} selected={selectedMetric === 'completed'} />
       </div>
+
+      {selectedMetric && (
+        <div className="bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-xl p-6 space-y-5">
+          <div className="border-b border-[#E7DED1] pb-4">
+            <h2 className="text-xl font-serif font-bold text-[#4A2523]">{metricDetails[selectedMetric].title}</h2>
+            <p className="text-xs text-[#746B66] mt-1">{metricDetails[selectedMetric].description}</p>
+          </div>
+          {detailsLoading ? (
+            <p className="text-sm text-[#746B66] py-4">Loading details…</p>
+          ) : details.length === 0 ? (
+            <p className="text-sm text-[#746B66] py-4">No records found.</p>
+          ) : (
+            <div className="divide-y divide-[#E7DED1]">
+              {details.map((item) => (
+                <article key={item.id} className="py-4 first:pt-0 last:pb-0">
+                  {selectedMetric === 'posts' || selectedMetric === 'completed' ? (
+                    <>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <h3 className="font-serif font-bold text-[#4A2523]">{item.eventName}</h3>
+                        <Badge status={item.status} />
+                      </div>
+                      <p className="text-xs text-[#746B66] mt-1">Posted by {item.donorName} · {item.foodType} · {item.quantity}</p>
+                      <p className="text-xs text-[#746B66] mt-1">Estimated meals: {item.estimatedMeals ?? 'Not provided'}{item.ngoName ? ` · NGO: ${item.ngoName}` : ''}{item.volunteerName ? ` · Volunteer: ${item.volunteerName}` : ''}</p>
+                    </>
+                  ) : selectedMetric === 'volunteers' ? (
+                    <>
+                      <h3 className="font-serif font-bold text-[#4A2523]">{item.name}</h3>
+                      <p className="text-xs text-[#746B66] mt-1">{item.email}{item.phone ? ` · ${item.phone}` : ''}</p>
+                      <p className="text-xs text-[#746B66] mt-1">Registered {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'date unavailable'}</p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-serif font-bold text-[#4A2523]">{item.organization || 'Unnamed organization'}</h3>
+                        <Badge status={item.verificationStatus} />
+                      </div>
+                      <p className="text-xs text-[#746B66] mt-1">Registration number: {item.registrationNumber || 'Not provided'} · Contact: {item.name} · {item.email}</p>
+                    </>
+                  )}
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-xl p-6 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E7DED1] pb-3">

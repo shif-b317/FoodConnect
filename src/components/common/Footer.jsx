@@ -13,9 +13,7 @@ const Footer = () => {
           {/* Col 1: Brand */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-fc-md bg-[#FFFDF8] text-[#4A2523] flex items-center justify-center font-bold text-lg shadow-sm">
-                FC
-              </div>
+              <img src="/food-connect-logo.png" alt="" className="w-10 h-10 rounded-full object-cover shadow-sm" />
               <span className="font-serif font-bold text-2xl tracking-tight text-[#FFF9F0]">
                 FOOD CONNECT
               </span>

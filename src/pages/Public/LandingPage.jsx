@@ -34,11 +34,6 @@ const LandingPage = () => {
             
             {/* Left Column: Heading & Copy */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#F8EFE1] border border-[#E8D8C1] text-[#4A2523] text-xs font-semibold tracking-wide">
-                <FiHeart className="w-3.5 h-3.5 text-[#D7A94C]" />
-                <span>Zero Food Waste • Social Impact Platform</span>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#4A2523] leading-[1.15] tracking-tight">
                 Surplus Food. <br />
                 <span className="italic font-normal text-[#6B403C]">Stronger Communities.</span>
@@ -88,17 +83,6 @@ const LandingPage = () => {
                   alt="Surplus food spread from community feast"
                   className="w-full h-[420px] object-cover rounded-fc-lg"
                 />
-                <div className="absolute bottom-6 left-6 right-6 bg-[#FFFDF8]/95 backdrop-blur-md border border-[#E7DED1] rounded-fc-lg p-4 shadow-md">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-[#E8F0E6] text-[#5F8F65] flex items-center justify-center shrink-0">
-                      <FiCheckCircle className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-[#4A2523]">Grand Wedding Buffet Rescued</div>
-                      <div className="text-xs text-[#746B66]">150 freshly cooked meals delivered to Hope Shelter</div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -249,67 +233,13 @@ const LandingPage = () => {
 
             <div>
               <img
-                src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800"
-                alt="Volunteers serving meals at community center"
+                src="/indian-vegetarian-meal.png"
+                alt="Vegetarian Indian meal with rice, dal, roti, paneer, vegetables, and chutneys"
                 className="w-full h-[360px] object-cover rounded-fc-lg border border-[#E7DED1]"
               />
             </div>
 
           </div>
-        </div>
-      </section>
-
-      {/* 5. SUCCESS STORIES & TESTIMONIALS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <h2 className="text-3xl font-serif font-bold text-[#4A2523]">Real Stories of Impact</h2>
-          <p className="text-sm text-[#746B66] mt-2">How surplus food from celebrations became warm meals for others.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          
-          <div className="bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-lg p-6 space-y-4">
-            <div className="flex items-center space-x-3">
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
-                alt="Donor Avatar"
-                className="w-12 h-12 rounded-full object-cover border border-[#E7DED1]"
-              />
-              <div>
-                <h4 className="font-serif font-bold text-base text-[#4A2523]">Ananya & Vikram Hegde</h4>
-                <p className="text-xs text-[#746B66]">Wedding Hosts, Mangalore</p>
-              </div>
-            </div>
-            <p className="text-sm text-[#2D2422] italic leading-relaxed">
-              "We had over 180 meals left after our reception. Through FOOD CONNECT, Hope Shelter accepted the donation within 20 minutes, and a volunteer picked it up in thermal boxes. Knowing our celebration fed families brought so much peace."
-            </p>
-            <div className="pt-2 text-xs font-semibold text-[#D7A94C] flex items-center space-x-2">
-              <FiCheckCircle className="w-4 h-4 text-[#5F8F65]" />
-              <span>Rescued 180 Meals • 100% Food Delivered</span>
-            </div>
-          </div>
-
-          <div className="bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-lg p-6 space-y-4">
-            <div className="flex items-center space-x-3">
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
-                alt="NGO Director Avatar"
-                className="w-12 h-12 rounded-full object-cover border border-[#E7DED1]"
-              />
-              <div>
-                <h4 className="font-serif font-bold text-base text-[#4A2523]">Sister Maria D'Souza</h4>
-                <p className="text-xs text-[#746B66]">Director, Hope Shelter & Kitchen</p>
-              </div>
-            </div>
-            <p className="text-sm text-[#2D2422] italic leading-relaxed">
-              "Accessing surplus food notifications from major event halls in the city allows our kitchen to provide wholesome, varied meals to over 250 residents daily without budget constraints."
-            </p>
-            <div className="pt-2 text-xs font-semibold text-[#D7A94C] flex items-center space-x-2">
-              <FiCheckCircle className="w-4 h-4 text-[#5F8F65]" />
-              <span>Verified NGO Partner • 1,200+ Meals Received</span>
-            </div>
-          </div>
-
         </div>
       </section>
 

@@ -41,7 +41,7 @@ const ForgotPassword = () => {
     <div className="min-h-[75vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-[#FFFDF8] border border-[#E7DED1] rounded-fc-xl p-8 shadow-lg text-center space-y-6">
         <Link to="/" className="inline-flex items-center space-x-2">
-          <div className="w-9 h-9 rounded-fc-md bg-[#4A2523] flex items-center justify-center text-[#D7A94C] font-bold text-sm">FC</div>
+          <img src="/food-connect-logo.png" alt="" className="w-9 h-9 rounded-full object-cover" />
           <span className="font-serif font-bold text-xl text-[#4A2523]">FOOD CONNECT</span>
         </Link>
 
