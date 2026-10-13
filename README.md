@@ -1,153 +1,87 @@
 # Food Connect
 
-### Share Food. Share Hope.
+**Share. Rescue. Connect.**
 
-Food Connect is a surplus food redistribution platform that connects event hosts, caterers, verified NGOs, and volunteers. The platform helps reduce food waste by coordinating the donation, acceptance, pickup, delivery, and distribution of surplus cooked food.
-
----
-
-## Table of Contents
-
-- [Features](#features)
-- [How It Works](#how-it-works)
-- [User Roles](#user-roles)
-- [Technology Stack](#technology-stack)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Environment Configuration](#environment-configuration)
-- [Running the Application](#running-the-application)
-- [Available Scripts](#available-scripts)
-- [API Documentation](#api-documentation)
-- [Administrator Setup](#administrator-setup)
-- [NGO Verification](#ngo-verification)
-- [Email Notifications](#email-notifications)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Security](#security)
-- [Impact](#impact)
-- [License](#license)
-
----
+Food Connect is a surplus food redistribution platform that connects event organizers, caterers, verified non-governmental organizations (NGOs), and volunteers. The platform facilitates the donation, collection, and distribution of surplus cooked food, helping reduce food waste and improve access to food for communities in need.
 
 ## Features
 
-- Food donation management for events, weddings, conferences, and gatherings.
-- Integration with verified NGOs for food redistribution.
-- Browsing nearby available food donations.
-- Role-based workflows for accepting donations.
-- Volunteer assignment for food pickup and delivery.
-- Donation and delivery status tracking.
-- Dedicated dashboards for donors, NGOs, volunteers, and administrators.
-- NGO verification and approval workflow.
-- In-app notifications.
-- Email notification support.
-- User profile and account settings.
-- Password reset functionality.
-- Public impact metrics.
-- Administrative metrics and NGO management.
-- Responsive design for desktop and mobile devices.
-
----
+- Surplus food donation management for events and gatherings
+- Connection between donors and verified NGOs
+- Discovery and acceptance of available food donations
+- Volunteer coordination for food collection and delivery
+- Donation and delivery status tracking
+- Role-based dashboards for donors, NGOs, volunteers, and administrators
+- NGO registration verification and approval
+- In-app and email notification support
+- User profiles and account management
+- Password reset functionality
+- Platform impact metrics and administrative dashboards
+- Responsive interface for desktop and mobile devices
 
 ## How It Works
 
 ### 1. Donors
 
-Donors, including event hosts and caterers, can:
+Donors, including event organizers and caterers, can:
 
-1. Create an account as a donor.
-2. Post details about available surplus food.
-3. Specify the number of meals, preparation time, pickup location, and food information.
+1. Register for a donor account.
+2. Publish details of available surplus food.
+3. Provide meal quantities, preparation time, pickup location, and relevant food information.
 4. Wait for a verified NGO to accept the donation.
-5. Hand over the food to an assigned volunteer.
-6. Track the donation until delivery is completed.
+5. Coordinate food collection with an assigned volunteer.
+6. Track the donation through delivery.
 
 ### 2. Verified NGOs
 
 NGOs can:
 
 1. Register and submit their organization details.
-2. Wait for administrator verification.
-3. Browse nearby available donations.
-4. Accept suitable food donations.
-5. Coordinate with volunteers for pickup.
-6. Receive the food and distribute it to people in need.
+2. Await administrator verification.
+3. Browse available food donations.
+4. Accept suitable donations.
+5. Coordinate collection with volunteers.
+6. Receive donations and distribute food to people in need.
 
 ### 3. Volunteers
 
 Volunteers can:
 
 1. View available pickup assignments.
-2. Accept a suitable route.
-3. Collect surplus food from the donor.
-4. Transport food safely to the NGO.
+2. Accept suitable assignments.
+3. Collect surplus food from donors.
+4. Transport food to the designated NGO.
 5. Update delivery status after handover.
-
----
 
 ## User Roles
 
-### Donor
-
-- Create and manage food donations.
-- View donation history.
-- Track donation status.
-- Cancel eligible donations.
-- Manage profile and notification preferences.
-
-### NGO
-
-- Submit organization verification details.
-- Browse nearby donations after approval.
-- Accept available donations.
-- Manage accepted donations.
-- Coordinate food distribution.
-
-### Volunteer
-
-- View available pickup assignments.
-- Accept pickup requests.
-- Track assigned deliveries.
-- Update delivery progress.
-
-### Administrator
-
-- Manage NGO verification requests.
-- Approve or reject NGO registrations.
-- View platform metrics.
-- Monitor donation and user activity.
-
----
+| Role | Responsibilities |
+|---|---|
+| Donor | Create and manage food donations and track their status. |
+| NGO | Complete verification, accept donations, and coordinate distribution. |
+| Volunteer | Manage pickup assignments and delivery progress. |
+| Administrator | Review NGO applications and monitor platform activity. |
 
 ## Technology Stack
 
-### Frontend
+**Frontend**
+- React
+- React Router
+- Vite
+- Tailwind CSS
+- Framer Motion
+- React Icons
 
-| Technology | Purpose |
-|---|---|
-| React | User interface development |
-| React Router | Frontend routing |
-| Vite | Development server and build tooling |
-| Tailwind CSS | Styling and responsive layouts |
-| Framer Motion | Animations and transitions |
-| React Icons | Icon library |
-
-### Backend
-
-| Technology | Purpose |
-|---|---|
-| Node.js | JavaScript runtime |
-| Express | Backend API framework |
-| MongoDB | Database |
-| Mongoose | MongoDB object modeling |
-| JSON Web Tokens (JWT) | Authentication |
-| bcrypt | Password hashing |
-| Helmet | HTTP security headers |
-| CORS | Cross-origin request configuration |
-| Express Rate Limit | API rate limiting |
-
----
+**Backend**
+- Node.js
+- Express
+- MongoDB
+- Mongoose
+- JSON Web Tokens (JWT)
+- bcrypt
+- Helmet
+- CORS
+- Express Rate Limit
 
 ## Project Structure
 
@@ -156,20 +90,20 @@ FoodConnect/
 ├── public/                    # Static assets and images
 ├── src/
 │   ├── components/            # Reusable UI components
-│   ├── context/               # Authentication and application state
-│   ├── data/                  # Mock and static data
-│   ├── pages/                 # Application pages by user role
-│   ├── routes/                # Frontend route definitions
-│   ├── services/              # API communication helpers
+│   ├── context/               # Application state and authentication
+│   ├── data/                  # Static and mock data
+│   ├── pages/                 # Application pages
+│   ├── routes/                # Frontend routing
+│   ├── services/              # API communication
 │   ├── App.jsx
 │   ├── index.css
 │   └── main.jsx
 ├── backend/
 │   ├── src/
-│   │   ├── models/            # MongoDB models
-│   │   ├── routes/            # API routes
+│   │   ├── models/            # Database models
+│   │   ├── routes/            # Backend routes
 │   │   ├── services/          # Backend services
-│   │   ├── middleware/        # Authentication middleware
+│   │   ├── middleware/        # Request middleware
 │   │   └── server.js
 │   ├── .env.example
 │   └── package.json
@@ -178,38 +112,35 @@ FoodConnect/
 └── vite.config.js
 ```
 
----
-
 ## Prerequisites
 
 Ensure the following are installed:
 
-- Node.js 18 or later.
-- npm.
-- MongoDB, either locally or through MongoDB Atlas.
-
----
+- Node.js 18 or later
+- npm
+- MongoDB, locally or through MongoDB Atlas
+- Git
 
 ## Installation
 
-### Step 1: Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd FoodConnect
 ```
 
-Replace `<repository-url>` with the public or authorized URL of the repository.
+Replace `<repository-url>` with the repository's public URL or an authorized clone URL.
 
-### Step 2: Install Frontend Dependencies
+### 2. Install Dependencies
 
-From the project root, run:
+Install the frontend dependencies from the project root:
 
 ```bash
 npm install
 ```
 
-### Step 3: Install Backend Dependencies
+Install the backend dependencies:
 
 ```bash
 cd backend
@@ -217,304 +148,103 @@ npm install
 cd ..
 ```
 
----
-
 ## Environment Configuration
 
-Configuration values should be stored in local environment files or your deployment platform's environment settings. Do not commit actual credentials or secrets to GitHub.
+Configure the required environment variables for your local development environment.
 
-### Backend Configuration
+- Create the necessary local environment files based on the project's configuration.
+- Configure the database connection and authentication settings.
+- Set the frontend and backend URLs as required.
+- Configure email services if email notifications are enabled.
 
-Create a `.env` file inside the `backend` directory.
-
-Use the following example and adjust it to match the application's configuration:
-
-```env
-PORT=4000
-NODE_ENV=development
-MONGODB_URI=<your-mongodb-connection-string>
-JWT_SECRET=<your-random-secret>
-CLIENT_ORIGIN=http://localhost:5173
-PUBLIC_APP_URL=http://localhost:5173
-TRUST_PROXY_HOPS=0
-EMAIL_PROVIDER=console
-RESEND_API_KEY=
-EMAIL_FROM=
-```
-
-For local development, the console email provider can be used. Password reset links will be displayed in the backend terminal.
-
-The values shown above are example development settings, not production credentials.
-
-### Frontend Configuration
-
-If the backend runs at a different URL, create a `.env.local` file in the project root:
-
-```env
-VITE_API_URL=http://localhost:4000
-```
-
-If `VITE_API_URL` is not configured, the frontend uses the relative API path:
-
-```text
-/api/v1
-```
-
-Never place private API keys, database credentials, or other secrets in frontend environment variables prefixed with `VITE_`, because those values may be exposed in the client-side build.
-
----
+Use placeholder values in public examples. Never commit real passwords, database connection strings containing credentials, authentication secrets, API keys, access tokens, or private environment files to GitHub.
 
 ## Running the Application
 
-Run the backend and frontend in separate terminals.
-
-### Start the Backend
-
-From the project root:
+Start the backend in one terminal:
 
 ```bash
 cd backend
 npm run dev
 ```
 
-The backend API runs by default at:
-
-```text
-http://localhost:4000
-```
-
-### Start the Frontend
-
-Open another terminal in the project root:
+Start the frontend in a separate terminal from the project root:
 
 ```bash
 npm run dev
 ```
 
-The frontend runs by default at:
-
-```text
-http://localhost:5173
-```
-
----
+The application uses the configured local frontend and backend addresses. Confirm the ports and environment settings in your local configuration.
 
 ## Available Scripts
 
-### Frontend Scripts
+### Frontend
 
-Run these commands from the project root.
+Run these commands from the project root:
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start the Vite development server |
-| `npm run build` | Create a production build |
+| `npm run dev` | Start the development server |
+| `npm run build` | Generate a production build |
 | `npm run preview` | Preview the production build |
 | `npm run lint` | Run ESLint |
 
-### Backend Scripts
+### Backend
 
-Run these commands from the `backend` directory.
+Run these commands from the `backend` directory:
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start the backend in watch mode |
+| `npm run dev` | Start the backend in development mode |
 | `npm start` | Start the backend |
 | `npm test` | Run backend tests |
-| `npm run admin:create` | Create an administrator account |
 
----
-
-## API Documentation
-
-The backend API is versioned under:
-
-```text
-/api/v1
-```
-
-### Health Checks
-
-| Method | Endpoint |
-|---|---|
-| GET | `/api/v1/live` |
-| GET | `/api/v1/health` |
-
-### Authentication
-
-| Method | Endpoint |
-|---|---|
-| POST | `/api/v1/auth/register` |
-| POST | `/api/v1/auth/login` |
-| GET | `/api/v1/auth/me` |
-| PATCH | `/api/v1/auth/me` |
-| PATCH | `/api/v1/auth/me/preferences` |
-| PATCH | `/api/v1/auth/me/password` |
-| POST | `/api/v1/auth/forgot-password` |
-| POST | `/api/v1/auth/reset-password` |
-
-### Donations
-
-| Method | Endpoint |
-|---|---|
-| POST | `/api/v1/donations` |
-| GET | `/api/v1/donations` |
-| GET | `/api/v1/donations/:id` |
-| POST | `/api/v1/donations/:id/accept` |
-| POST | `/api/v1/donations/:id/cancel` |
-| POST | `/api/v1/donations/:id/assign-volunteer` |
-| PATCH | `/api/v1/donations/:id/status` |
-
-### Notifications
-
-| Method | Endpoint |
-|---|---|
-| GET | `/api/v1/notifications` |
-| PATCH | `/api/v1/notifications/:id/read` |
-| PATCH | `/api/v1/notifications/read-all` |
-
-### Metrics and Administration
-
-| Method | Endpoint |
-|---|---|
-| GET | `/api/v1/impact` |
-| GET | `/api/v1/admin/metrics` |
-| GET | `/api/v1/admin/ngos` |
-| PATCH | `/api/v1/admin/ngos/:id/verification` |
-
----
-
-## Administrator Setup
-
-To create an administrator account, navigate to the `backend` directory and run:
-
-```bash
-npm run admin:create
-```
-
-Follow the prompts to enter an administrator email address and password. Use a secure, unique password and avoid sharing administrator credentials in the repository.
-
----
-
-## NGO Verification
-
-New NGO accounts remain in a pending state until an administrator reviews their registration details.
-
-Administrators can:
-
-- View pending NGO applications.
-- Review organization information.
-- Review registration numbers.
-- Review optional HTTPS verification evidence.
-- Approve or reject NGO applications.
-- Add notes to rejected applications.
-
-Only verified NGOs can browse and accept available donations.
-
----
-
-## Email Notifications
-
-### Local Development
-
-For local development, use the console email provider:
-
-```env
-EMAIL_PROVIDER=console
-```
-
-Password reset links will be displayed in the backend terminal.
-
-### Production Email Delivery
-
-For production email delivery using Resend, configure the following environment variables in your deployment settings:
-
-```env
-EMAIL_PROVIDER=resend
-RESEND_API_KEY=<your-resend-api-key>
-EMAIL_FROM=<your-verified-sender-address>
-PUBLIC_APP_URL=<your-frontend-url>
-```
-
-The sender domain or address must be verified with Resend before sending emails.
-
-Do not publish actual API keys or private email service credentials.
-
----
+Refer to the project's package configuration for the available scripts.
 
 ## Testing
 
-The backend test suite uses a separate MongoDB database.
+The backend includes a test suite. Configure a dedicated test database before running tests.
 
-Configure a dedicated test database using PowerShell:
-
-```powershell
-$env:MONGODB_TEST_URI = "mongodb://127.0.0.1:27017/food_connect_test"
-npm test
-```
-
-Use a database whose name ends with `_test` to avoid accidentally modifying development or production data.
-
----
+Use a separate test environment to avoid modifying development or production data. Confirm that the test configuration is correct before executing the test suite.
 
 ## Deployment
 
-The project includes a `render.yaml` configuration for deploying:
+The project includes configuration for deployment using Render, with MongoDB Atlas for database hosting and Resend as an email delivery option.
 
-- **Render:** Backend web service and frontend static site.
-- **MongoDB Atlas:** Database hosting.
-- **Resend:** Email delivery.
+Deployment requires environment-specific configuration for database connectivity, authentication, application URLs, and any enabled external services.
 
-Before deploying, configure the following environment variables through the appropriate service settings:
+Configure these values securely through the relevant hosting platforms. Do not include production credentials or private configuration files in the repository.
 
-- `MONGODB_URI`
-- `JWT_SECRET`
-- `CLIENT_ORIGIN`
-- `PUBLIC_APP_URL`
-- `RESEND_API_KEY`
-- `EMAIL_FROM`
+## Security Considerations
 
-Use secure production values and the correct deployed application URLs.
+The project uses or documents security-related mechanisms such as:
 
-Never commit production credentials, private keys, access tokens, or `.env` files to the repository.
+- Password hashing
+- JWT-based authentication
+- Authentication middleware
+- Role-based access control
+- NGO verification workflows
+- HTTP security headers
+- API rate limiting
+- Cross-origin request configuration
 
----
+Security controls should be reviewed and tested against the actual implementation. Keep dependencies updated, validate configuration, and protect credentials and sensitive data.
 
-## Security
+## Expected Impact
 
-The project documentation describes the following security measures:
+Food Connect aims to:
 
-- Passwords are hashed before storage.
-- Authentication uses JWT access tokens.
-- Protected routes require authentication.
-- Role-based access control protects user workflows.
-- Unverified NGOs cannot accept donations.
-- Helmet provides HTTP security headers.
-- Rate limiting helps protect API endpoints.
-- CORS restricts frontend access to approved origins.
-- Production configuration validates secure URLs and secrets.
-
-These measures should be verified against the actual implementation before making security claims about a production deployment.
-
----
-
-## Impact
-
-Food Connect aims to help communities:
-
-- Reduce food waste.
-- Redistribute surplus cooked meals.
-- Support local NGOs.
-- Enable volunteer-led delivery.
-- Improve access to food for people in need.
-- Track measurable community impact.
-
----
+- Reduce avoidable food waste
+- Redistribute surplus cooked meals
+- Support local NGOs
+- Enable volunteer-led food collection and delivery
+- Improve access to food for people in need
+- Strengthen coordination between donors and recipient organizations
 
 ## License
 
-This project is currently available for educational and development purposes. Add an appropriate license before distributing or using it commercially.
+This project is intended for educational and development purposes. Add an appropriate open-source license before authorizing redistribution or commercial use.
 
 ---
 
-**Food Connect — Share Food. Share Hope.**
+**Food Connect — Share. Rescue. Connect.**
