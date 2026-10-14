@@ -130,7 +130,10 @@ describe('POST /api/v1/chat — error handling', () => {
   test('does not leak API keys or stack traces', async () => {
     const { payload } = await chat({ message: 'How can I donate food?' });
     const serialized = JSON.stringify(payload);
-    assert.ok(!serialized.includes(config.geminiApiKey), 'Response must not contain API key');
+    if (config.geminiApiKey) {
+      assert.ok(!serialized.includes(config.geminiApiKey), 'Response must not contain API key');
+    }
+    assert.ok(!serialized.includes('GEMINI_API_KEY'), 'Response must not contain env var names');
     assert.ok(!serialized.includes('stack'), 'Response must not contain stack traces');
   });
 
