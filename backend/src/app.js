@@ -10,6 +10,7 @@ import donationRoutes from './routes/donations.js';
 import notificationRoutes from './routes/notifications.js';
 import adminRoutes from './routes/admin.js';
 import impactRoutes from './routes/impact.js';
+import chatRoutes from './routes/chat.js';
 import { errorHandler } from './utils/errors.js';
 
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/v1/donations', donationRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/impact', impactRoutes);
+app.use('/api/v1/chat', chatRoutes);
 app.get('/api/v1/live', (req, res) => res.json({ success: true, data: { status: 'ok' } }));
 app.get('/api/v1/health', (req, res) => {
   const connected = mongoose.connection.readyState === 1;

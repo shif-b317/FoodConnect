@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
+import FoodConnectChatbot from './components/common/FoodConnectChatbot';
 import AppRoutes from './routes/AppRoutes';
 
 const ScrollToTop = () => {
@@ -27,6 +28,7 @@ const AppShell = () => {
           <AppRoutes />
         </main>
         <Footer />
+        <FoodConnectChatbot />
       </div>
     </>
   );

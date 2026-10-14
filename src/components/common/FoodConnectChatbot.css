@@ -1,0 +1,362 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   FoodConnect AI Chatbot — Styles
+   Uses the existing design tokens from :root (index.css) to stay visually
+   consistent with the rest of the application.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Floating Toggle Button ─────────────────────────────────────────────── */
+.fc-chat-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--fc-burgundy);
+  color: var(--fc-text-on-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 16px rgba(74, 37, 35, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fc-chat-toggle:hover {
+  background: var(--fc-burgundy-dark);
+  transform: scale(1.06);
+  box-shadow: 0 6px 20px rgba(74, 37, 35, 0.35);
+}
+.fc-chat-toggle:active {
+  transform: scale(0.97);
+}
+
+/* Badge for visual presence when panel is closed */
+.fc-chat-toggle-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--fc-gold);
+  border: 2px solid var(--fc-surface);
+}
+
+/* ── Chat Panel ─────────────────────────────────────────────────────────── */
+.fc-chat-panel {
+  position: fixed;
+  bottom: 92px;
+  right: 24px;
+  z-index: 1000;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 120px);
+  background: var(--fc-surface);
+  border: 1px solid var(--fc-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(45, 36, 34, 0.12), 0 2px 8px rgba(45, 36, 34, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fc-chat-slide-up 0.25s ease-out;
+}
+@keyframes fc-chat-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.fc-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--fc-burgundy);
+  color: var(--fc-text-on-dark);
+  flex-shrink: 0;
+}
+.fc-chat-header-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.fc-chat-header-text {
+  flex: 1;
+  min-width: 0;
+}
+.fc-chat-header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+.fc-chat-header-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0;
+  line-height: 1.3;
+}
+.fc-chat-close {
+  background: none;
+  border: none;
+  color: var(--fc-text-on-dark);
+  cursor: pointer;
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+.fc-chat-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Messages Area ──────────────────────────────────────────────────────── */
+.fc-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+/* Custom scrollbar for the chat area */
+.fc-chat-messages::-webkit-scrollbar {
+  width: 5px;
+}
+.fc-chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+.fc-chat-messages::-webkit-scrollbar-thumb {
+  background: var(--fc-beige);
+  border-radius: 3px;
+}
+
+/* ── Message Bubbles ────────────────────────────────────────────────────── */
+.fc-chat-message {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.55;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.fc-chat-message--user {
+  align-self: flex-end;
+  background: var(--fc-burgundy);
+  color: var(--fc-text-on-dark);
+  border-bottom-right-radius: 4px;
+}
+.fc-chat-message--assistant {
+  align-self: flex-start;
+  background: var(--fc-surface-warm);
+  color: var(--fc-text);
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--fc-border);
+}
+.fc-chat-message--error {
+  align-self: flex-start;
+  background: var(--fc-danger-soft);
+  color: var(--fc-text);
+  border: 1px solid rgba(184, 76, 70, 0.2);
+  border-bottom-left-radius: 4px;
+}
+.fc-chat-message--error p {
+  margin: 0 0 8px 0;
+}
+.fc-chat-retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid var(--fc-danger);
+  color: var(--fc-danger);
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.fc-chat-retry-btn:hover {
+  background: rgba(184, 76, 70, 0.08);
+}
+
+/* ── Welcome & Suggested Questions ──────────────────────────────────────── */
+.fc-chat-welcome {
+  text-align: center;
+  padding: 8px 0 4px;
+}
+.fc-chat-welcome-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  color: var(--fc-gold);
+}
+.fc-chat-welcome h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: var(--fc-text);
+  margin: 0 0 4px;
+}
+.fc-chat-welcome p {
+  font-size: 13px;
+  color: var(--fc-text-muted);
+  margin: 0 0 12px;
+}
+.fc-chat-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fc-chat-suggestion-btn {
+  width: 100%;
+  text-align: left;
+  background: var(--fc-surface-warm);
+  border: 1px solid var(--fc-border);
+  color: var(--fc-text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.fc-chat-suggestion-btn:hover {
+  background: var(--fc-surface-muted);
+  border-color: var(--fc-border-strong);
+}
+
+/* ── Loading Indicator ──────────────────────────────────────────────────── */
+.fc-chat-loading {
+  align-self: flex-start;
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--fc-surface-warm);
+  border: 1px solid var(--fc-border);
+  border-radius: 12px;
+  border-bottom-left-radius: 4px;
+}
+.fc-chat-loading-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--fc-burgundy-soft);
+  animation: fc-chat-bounce 1.2s infinite ease-in-out;
+}
+.fc-chat-loading-dot:nth-child(2) { animation-delay: 0.15s; }
+.fc-chat-loading-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes fc-chat-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ── Input Area ─────────────────────────────────────────────────────────── */
+.fc-chat-input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--fc-border);
+  background: var(--fc-surface);
+  flex-shrink: 0;
+}
+.fc-chat-input {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--fc-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--fc-text);
+  background: var(--fc-background);
+  min-height: 40px;
+  max-height: 100px;
+  overflow-y: auto;
+  transition: border-color 0.15s ease;
+}
+.fc-chat-input::placeholder {
+  color: var(--fc-text-soft);
+}
+.fc-chat-input:focus {
+  outline: none;
+  border-color: var(--fc-burgundy-soft);
+}
+.fc-chat-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: var(--fc-burgundy);
+  color: var(--fc-text-on-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+.fc-chat-send:hover:not(:disabled) {
+  background: var(--fc-burgundy-dark);
+}
+.fc-chat-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Markdown-like formatting for assistant messages ────────────────────── */
+.fc-chat-message--assistant p {
+  margin: 0 0 8px;
+}
+.fc-chat-message--assistant p:last-child {
+  margin-bottom: 0;
+}
+.fc-chat-message--assistant ul,
+.fc-chat-message--assistant ol {
+  margin: 4px 0 8px;
+  padding-left: 18px;
+}
+.fc-chat-message--assistant li {
+  margin-bottom: 2px;
+}
+.fc-chat-message--assistant strong {
+  font-weight: 600;
+}
+
+/* ── Mobile Responsiveness ──────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .fc-chat-panel {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+  }
+  .fc-chat-toggle {
+    bottom: 16px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+  }
+}

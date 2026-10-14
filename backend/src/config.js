@@ -13,4 +13,6 @@ export const config = {
   emailFrom: process.env.EMAIL_FROM,
   publicAppUrl: process.env.PUBLIC_APP_URL || process.env.CLIENT_ORIGIN?.split(',')[0] || 'http://localhost:5173',
   trustProxyHops: Number.parseInt(process.env.TRUST_PROXY_HOPS || (process.env.NODE_ENV === 'production' ? '1' : '0'), 10),
+  geminiApiKey: process.env.GEMINI_API_KEY || '',
+  geminiModel: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
 };

@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import app from './app.js';
 import { config } from './config.js';
 
+// Server initialization
+
 if (!config.mongoUri || !config.jwtSecret || config.jwtSecret.length < 32) {
   console.error('Set MONGODB_URI and a JWT_SECRET of at least 32 characters in backend/.env.');
   process.exit(1);
