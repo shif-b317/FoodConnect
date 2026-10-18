@@ -14,8 +14,10 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'How It Works', path: '/how-it-works' },
+    { name: 'Impact', path: '/impact' },
+    { name: 'Contact', path: '/contact' },
+    { name: 'FAQ', path: '/faq' },
   ];
-  const visibleNavLinks = user?.role === 'donor' ? [] : navLinks;
 
   const getDashboardPath = () => {
     if (!user) return '/login';
@@ -45,7 +47,7 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-7">
-            {visibleNavLinks.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
@@ -126,7 +128,7 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#FFFDF8] border-b border-[#E7DED1] px-4 pt-3 pb-6 space-y-3 animate-fadeIn">
           <div className="flex flex-col space-y-2">
-            {visibleNavLinks.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}

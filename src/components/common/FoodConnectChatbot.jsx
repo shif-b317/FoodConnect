@@ -61,10 +61,6 @@ export default function FoodConnectChatbot() {
   const textareaRef = useRef(null);
   const location = useLocation();
 
-  // Don't show on login / register pages (consistent with Navbar hiding).
-  const hideOnPaths = ['/login', '/register'];
-  if (hideOnPaths.includes(location.pathname)) return null;
-
   // ── Auto-scroll to bottom ──────────────────────────────────────────────
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -156,6 +152,10 @@ export default function FoodConnectChatbot() {
   const handleSuggestionClick = useCallback((question) => {
     sendMessage(question);
   }, [sendMessage]);
+
+  // Don't show on login / register pages (consistent with Navbar hiding).
+  const hideOnPaths = ['/login', '/register'];
+  if (hideOnPaths.includes(location.pathname)) return null;
 
   // ── Render ────────────────────────────────────────────────────────────
   return (
