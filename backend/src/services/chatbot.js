@@ -6,6 +6,7 @@
  */
 
 import { config } from '../config.js';
+import { getPickupStatus } from './pickupTools.js';
 
 // ---------------------------------------------------------------------------
 // System prompt — kept in one place so it is easy to review and update.
@@ -32,7 +33,7 @@ const SYSTEM_PROMPT = `You are **FoodConnect AI**, a friendly and professional a
 - Only describe features and workflows that actually exist in the Food Connect application.
 - The application has: donor registration and login, food donation creation, NGO verification and donation acceptance, volunteer assignment and delivery tracking, notification system, profile management, and impact metrics.
 - Do NOT invent donation listings, NGO names, contact details, or pickup schedules.
-- Do NOT claim to have accessed live application data, created or modified donations, scheduled pickups, or contacted anyone.
+- You may look up a pickup's status with the getPickupStatus tool when a user asks about a specific pickup ID, and must report only what the tool returns.
 - Do NOT claim that a feature exists unless it is listed in your supported topics above.
 - If you are unsure whether something is available, say so honestly.
 
@@ -52,6 +53,24 @@ const SYSTEM_PROMPT = `You are **FoodConnect AI**, a friendly and professional a
 // Keeps the context window small and costs low.
 // ---------------------------------------------------------------------------
 const MAX_HISTORY_TURNS = 10;
+
+const TOOLS = [{
+  functionDeclarations: [{
+    name: 'getPickupStatus',
+    description: 'Gets the current status and scheduled time of a food pickup by its ID',
+    parameters: {
+      type: 'OBJECT',
+      properties: {
+        pickupId: { type: 'STRING' },
+      },
+      required: ['pickupId'],
+    },
+  }],
+}];
+
+const TOOL_HANDLERS = {
+  getPickupStatus: (args) => getPickupStatus(args.pickupId),
+};
 
 // ---------------------------------------------------------------------------
 // Call the Gemini API using the official REST endpoint.
@@ -93,6 +112,7 @@ export async function getAIResponse(userMessage, history = []) {
   const requestBody = {
     systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
     contents,
+    tools: TOOLS,
     generationConfig: {
       temperature: 0.7,
       topP: 0.9,
@@ -107,48 +127,75 @@ export async function getAIResponse(userMessage, history = []) {
     ],
   };
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30_000);
-
-  let response;
-  try {
-    response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody),
-      signal: controller.signal,
-    });
-  } catch (err) {
-    if (err.name === 'AbortError') {
-      throw Object.assign(new Error('The AI service did not respond in time. Please try again.'), { code: 'AI_TIMEOUT', status: 504 });
+  for (let toolRound = 0; toolRound <= 3; toolRound += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
+    let response;
+    try {
+      response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal,
+      });
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        throw Object.assign(new Error('The AI service did not respond in time. Please try again.'), { code: 'AI_TIMEOUT', status: 504 });
+      }
+      throw Object.assign(new Error('Could not reach the AI service. Please try again later.'), { code: 'AI_UNAVAILABLE', status: 502 });
+    } finally {
+      clearTimeout(timeout);
     }
-    throw Object.assign(new Error('Could not reach the AI service. Please try again later.'), { code: 'AI_UNAVAILABLE', status: 502 });
-  } finally {
-    clearTimeout(timeout);
-  }
 
-  if (response.status === 429) {
-    throw Object.assign(new Error('The AI service is temporarily busy. Please wait a moment and try again.'), { code: 'AI_RATE_LIMITED', status: 429 });
-  }
-
-  if (!response.ok) {
-    const errorBody = await response.text().catch(() => '');
-    console.error(JSON.stringify({ type: 'gemini_api_error', status: response.status, body: errorBody.slice(0, 500) }));
-    throw Object.assign(new Error('The AI service encountered an error. Please try again later.'), { code: 'AI_ERROR', status: 502 });
-  }
-
-  const data = await response.json();
-
-  // Extract the text from the first candidate.
-  const replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!replyText) {
-    // The model may have been blocked by safety filters.
-    const blockReason = data?.candidates?.[0]?.finishReason;
-    if (blockReason === 'SAFETY') {
-      return "I'm sorry, I can't respond to that particular request. Could you rephrase your question about Food Connect or food donations?";
+    if (response.status === 429) {
+      throw Object.assign(new Error('The AI service is temporarily busy. Please wait a moment and try again.'), { code: 'AI_RATE_LIMITED', status: 429 });
     }
-    throw Object.assign(new Error('The AI service returned an empty response. Please try again.'), { code: 'AI_EMPTY_RESPONSE', status: 502 });
+
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => '');
+      console.error(JSON.stringify({ type: 'gemini_api_error', status: response.status, body: errorBody.slice(0, 500) }));
+      throw Object.assign(new Error('The AI service encountered an error. Please try again later.'), { code: 'AI_ERROR', status: 502 });
+    }
+
+    const data = await response.json();
+    const candidate = data?.candidates?.[0];
+    const candidateContent = candidate?.content;
+    const functionCallPart = candidateContent?.parts?.find((part) => part.functionCall);
+
+    if (functionCallPart) {
+      const { name, args = {} } = functionCallPart.functionCall;
+      const handler = TOOL_HANDLERS[name];
+      if (!handler) {
+        throw Object.assign(new Error('The AI service returned an unsupported tool call.'), { code: 'AI_ERROR', status: 502 });
+      }
+      console.log(JSON.stringify({ type: 'tool_call', name, pickupId: args.pickupId }));
+      contents.push(candidateContent);
+      contents.push({
+        role: 'user',
+        parts: [{
+          functionResponse: {
+            name,
+            response: await handler(args),
+          },
+        }],
+      });
+      requestBody.contents = contents;
+      continue;
+    }
+
+    // Extract the text from the first candidate.
+    const replyText = candidateContent?.parts?.[0]?.text;
+    if (!replyText) {
+      // The model may have been blocked by safety filters.
+      const blockReason = candidate?.finishReason;
+      if (blockReason === 'SAFETY') {
+        return "I'm sorry, I can't respond to that particular request. Could you rephrase your question about Food Connect or food donations?";
+      }
+      throw Object.assign(new Error('The AI service returned an empty response. Please try again.'), { code: 'AI_EMPTY_RESPONSE', status: 502 });
+    }
+
+    return replyText;
   }
 
-  return replyText;
+  throw Object.assign(new Error('The AI service returned too many tool calls. Please try again later.'), { code: 'AI_ERROR', status: 502 });
 }
