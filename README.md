@@ -1,5 +1,3 @@
-<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/0a83ca50-8900-4797-90ce-855e521e54ca" /># Food Connect
-
 **Share. Rescue. Connect.**
 
 Food Connect is a surplus food redistribution platform that connects event organizers, caterers, verified non-governmental organizations (NGOs), and volunteers. The platform facilitates the donation, collection, and distribution of surplus cooked food, helping reduce food waste and improve access to food for communities in need.
